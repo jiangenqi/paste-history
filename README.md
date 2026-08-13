@@ -43,7 +43,7 @@
 ### 方式一：下载安装包（推荐）
 
 前往 [Releases](https://github.com/jiangenqi/paste-history/releases) 页面下载
-`PasteHistory Setup x.x.x.exe`，双击安装即可。安装后程序驻留系统托盘，
+`PasteHistory v3.0.0.exe`，双击安装即可。安装后程序驻留系统托盘，
 `Alt+V` 呼出窗口。
 
 ### 方式二：从源码运行
