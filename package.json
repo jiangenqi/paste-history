@@ -1,6 +1,6 @@
 {
   "name": "paste-history",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "PasteHistory - 剪贴板历史管理工具 / Clipboard history manager for Windows",
   "main": "main.js",
   "author": "jiangenqi <1554949440@qq.com>",

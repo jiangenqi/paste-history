@@ -102,6 +102,13 @@ contextBridge.exposeInMainWorld('clipboardAPI', {
     return () => ipcRenderer.removeListener('eye:setState', handler);
   },
 
+  // 眼睛显示时的冷却重置（主进程确定性下发，不依赖 visibilitychange）
+  onEyeResetCooldown: (callback) => {
+    const handler = () => callback();
+    ipcRenderer.on('eye:resetCooldown', handler);
+    return () => ipcRenderer.removeListener('eye:resetCooldown', handler);
+  },
+
   // 伴生窗口 — 重置
   onCompanionReset: (callback) => {
     const handler = () => callback();

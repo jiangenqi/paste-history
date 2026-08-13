@@ -204,7 +204,8 @@ function showEyeMode() {
     }
     if (eyeWindow && !eyeWindow.isDestroyed()) {
       eyeWindow.show();
-      // 冷却重置改由 eye.js 的 visibilitychange 监听处理，这里不再依赖 executeJavaScript
+      // 冷却重置：IPC 确定性下发（visibilitychange 在后台窗口上不可靠）
+      eyeWindow.webContents.send('eye:resetCooldown');
       showCompanion();
       startEyeIdleTracking();
     }

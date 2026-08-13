@@ -14,12 +14,19 @@ let cooldownUntil = Date.now() + COOLDOWN_MS;
 let eyeState = 'awake';
 let startledTimer = null;
 
-// 窗口重新显示时重置冷却（不依赖主进程 executeJavaScript，更可靠）
+// 窗口重新显示时重置冷却：
+// 1) visibilitychange 兜底（某些场景下 Electron 不触发该事件）
+// 2) 主进程 IPC 确定性下发（eye:resetCooldown），保证每次呼出都重置
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible') {
     cooldownUntil = Date.now() + COOLDOWN_MS;
     closing = false;
   }
+});
+window.clipboardAPI.onEyeResetCooldown(() => {
+  cooldownUntil = Date.now() + COOLDOWN_MS;
+  closing = false;
+  document.body.classList.remove('closing');
 });
 
 function syncMaxShift() {
@@ -69,6 +76,7 @@ window.resetCooldown = function() {
 let dragging = false, startX = 0, startY = 0, hasMoved = false;
 
 document.body.addEventListener('mousedown', (e) => {
+  if (e.button !== 0) return; // 仅左键参与拖拽/单击关闭
   if (closing || Date.now() < cooldownUntil) return;
   dragging = true; hasMoved = false;
   startX = e.screenX; startY = e.screenY;
@@ -84,7 +92,8 @@ document.addEventListener('mousemove', (e) => {
   }
 });
 
-document.addEventListener('mouseup', () => {
+document.addEventListener('mouseup', (e) => {
+  if (e.button !== 0) return; // 仅左键触发"单击关闭"
   if (!dragging || closing || Date.now() < cooldownUntil) { dragging = false; return; }
   if (!hasMoved) {
     closing = true;
