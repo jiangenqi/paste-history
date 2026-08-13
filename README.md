@@ -50,10 +50,6 @@ PasteHistory 是一款轻量的 Windows 剪贴板历史管理工具。它在后�
   <img width="860" alt="PasteHistory 功能一览" src="https://github.com/user-attachments/assets/69375813-3979-4f53-bb63-513c61321e67" />
 </div>
 
-> 展示图由 `npm run screenshots` 生成（素材放 `assets/screenshots/raw/`，不入仓库），
-> 更换截图后重新生成并替换上方图片即可。
-
----
 
 ## 安装
 
