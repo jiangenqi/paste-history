@@ -11,7 +11,7 @@
 
 - 🪟 平台：Windows（x64）
 - ⚡ 框架：Electron + 原生 HTML/CSS/JS + SQLite（[sql.js](https://github.com/sql-js/sql.js)）
-- 🌐 界面语言：中文
+- 🌐 界面语言：中文（英文）
 - 📄 许可证：[MIT](LICENSE)
 
 ## 功能特性
@@ -32,8 +32,11 @@
 
 ## 界面
 
-<!-- TODO: 在这里放一张主界面截图 -->
-<!-- 建议：截图窗口 400x560，展示列表 + 底部工具栏；另加一张设置面板截图 -->
+<img width="689" height="944" alt="image" src="https://github.com/user-attachments/assets/f8d66540-71d5-4a14-af02-c7c7ab2a3f07" />
+<img width="825" height="959" alt="image" src="https://github.com/user-attachments/assets/ba715dda-ab39-493d-9b97-9f8d87d8fc9a" />
+<img width="975" height="1119" alt="image" src="https://github.com/user-attachments/assets/fe5a33f0-0d25-4348-883b-6a5136497fcb" />
+<img width="975" height="1119" alt="image" src="https://github.com/user-attachments/assets/e7a24a4f-6a73-4d38-b59d-582ee71131d1" />
+<img width="460" height="248" alt="image" src="https://github.com/user-attachments/assets/6b6a6816-3946-4f3e-b5d2-dedcfbf20f55" />
 
 ## 安装
 
