@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Local npm config (electron mirror for CN networks — keep local only)
+.npmrc
+
+# Internal dev logs (see CHANGELOG.md for release notes)
+dev-logs/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+*.code-workspace

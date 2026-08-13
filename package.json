@@ -1,0 +1,73 @@
+{
+  "name": "paste-history",
+  "version": "3.0.0",
+  "description": "PasteHistory - 剪贴板历史管理工具 / Clipboard history manager for Windows",
+  "main": "main.js",
+  "author": "jiangenqi <1554949440@qq.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jiangenqi/paste-history.git"
+  },
+  "homepage": "https://github.com/jiangenqi/paste-history#readme",
+  "bugs": {
+    "url": "https://github.com/jiangenqi/paste-history/issues"
+  },
+  "scripts": {
+    "start": "set ELECTRON_RUN_AS_NODE= && electron .",
+    "start:bash": "unset ELECTRON_RUN_AS_NODE && electron .",
+    "build": "electron-builder",
+    "icon": "electron tools/generate-icon.js"
+  },
+  "keywords": [
+    "clipboard",
+    "clipboard-history",
+    "clipboard-manager",
+    "windows",
+    "electron"
+  ],
+  "dependencies": {
+    "sql.js": "^1.14.1"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^26.15.3"
+  },
+  "build": {
+    "appId": "com.pastehistory.app",
+    "productName": "PasteHistory",
+    "artifactName": "PasteHistory Setup ${version}.${ext}",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "database.js",
+      "renderer/**/*",
+      "assets/**/*",
+      "node_modules/sql.js/**/*"
+    ],
+    "asarUnpack": [
+      "node_modules/sql.js/dist/*.wasm"
+    ],
+    "win": {
+      "icon": "assets/icon.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "PasteHistory",
+      "include": "build/installer.nsh"
+    }
+  }
+}

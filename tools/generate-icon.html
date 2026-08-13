@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; }
+  body {
+    width: 256px;
+    height: 256px;
+    background: transparent;
+    overflow: hidden;
+  }
+  svg { display: block; }
+</style>
+</head>
+<body>
+  <svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+    <!-- 圆角方形蓝色背景 -->
+    <rect x="0" y="0" width="256" height="256" rx="54" ry="54" fill="#007AFF" />
+    <!-- HTML flexbox 完美几何居中 -->
+    <foreignObject x="0" y="0" width="256" height="256">
+      <div xmlns="http://www.w3.org/1999/xhtml" style="
+        width: 256px; height: 256px;
+        display: flex; align-items: center; justify-content: center;
+      ">
+        <span style="
+          font-family: 'Segoe UI', 'Microsoft YaHei', 'PingFang SC', sans-serif;
+          font-weight: 700;
+          font-size: 150px;
+          color: #FFFFFF;
+          letter-spacing: -3px;
+          line-height: 1;
+        ">Ph</span>
+      </div>
+    </foreignObject>
+  </svg>
+</body>
+</html>
