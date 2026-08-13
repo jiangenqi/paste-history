@@ -4,9 +4,9 @@ const rightIris = document.getElementById('rightIris');
 const leftEye   = document.getElementById('leftEye');
 const rightEye  = document.getElementById('rightEye');
 
-// 打开后的冷却时间：这段时间内的点击不会触发"单击关闭"，
-// 防止眼睛刚出现（屏幕中央）时用户的误点立即把它关掉
-const COOLDOWN_MS = 2000;
+// 呼出后的短暂防误触窗口：过滤"眼睛刚出现"瞬间的误点（约 0.3 秒，比人眼反应快），
+// 之后单击眼睛立即关闭，无需等待
+const COOLDOWN_MS = 300;
 
 let maxShift = 5;
 let closing  = false;
