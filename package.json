@@ -17,7 +17,8 @@
     "start": "set ELECTRON_RUN_AS_NODE= && electron .",
     "start:bash": "unset ELECTRON_RUN_AS_NODE && electron .",
     "build": "electron-builder",
-    "icon": "electron tools/generate-icon.js"
+    "icon": "electron tools/generate-icon.js",
+    "screenshots": "electron tools/generate-screenshots.js"
   },
   "keywords": [
     "clipboard",

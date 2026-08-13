@@ -4,6 +4,9 @@ node_modules/
 # Build output
 dist/
 
+# Raw screenshots for README generation (outputs in assets/screenshots/ are committed)
+assets/screenshots/raw/
+
 # Local npm config (electron mirror for CN networks — keep local only)
 .npmrc
 

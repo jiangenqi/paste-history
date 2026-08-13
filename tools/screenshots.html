@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    font-family: "Segoe UI", "Microsoft YaHei", "PingFang SC", sans-serif;
+  }
+
+  /* ============ 通用 ============ */
+  .shot-frame {
+    background: #FFFFFF;
+    border-radius: 18px;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    padding: 10px;
+    box-shadow: 0 24px 60px rgba(31, 90, 160, 0.16);
+  }
+  .shot-frame img {
+    display: block;
+    border-radius: 10px;
+    max-width: 100%;
+  }
+
+  /* ============ HERO（1200×680）============ */
+  #hero {
+    width: 1200px;
+    height: 680px;
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    padding: 0 60px;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #DFF0FE 0%, #F5F7FA 45%, #E8F3FD 100%);
+  }
+  /* 背景装饰圆 */
+  #hero::before, #hero::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(2px);
+  }
+  #hero::before {
+    width: 480px; height: 480px;
+    right: -140px; top: -160px;
+    background: radial-gradient(circle, rgba(0, 122, 255, 0.10), transparent 70%);
+  }
+  #hero::after {
+    width: 420px; height: 420px;
+    left: -140px; bottom: -180px;
+    background: radial-gradient(circle, rgba(0, 122, 255, 0.08), transparent 70%);
+  }
+
+  .hero-left { width: 46%; position: relative; z-index: 1; }
+  .hero-icon {
+    width: 88px; height: 88px;
+    border-radius: 20px;
+    box-shadow: 0 10px 24px rgba(0, 122, 255, 0.25);
+    margin-bottom: 24px;
+  }
+  .hero-title {
+    font-size: 46px;
+    font-weight: 700;
+    color: #1D1D1F;
+    letter-spacing: -0.5px;
+  }
+  .hero-subtitle {
+    font-size: 17px;
+    color: #86868B;
+    margin-top: 8px;
+    margin-bottom: 28px;
+  }
+  .hero-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 30px;
+  }
+  .hero-features li {
+    font-size: 16px;
+    color: #3C3C43;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .hero-features li .f-ico {
+    width: 22px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .hero-badges {
+    display: flex;
+    gap: 10px;
+  }
+  .hero-badges span {
+    font-size: 13px;
+    font-weight: 500;
+    color: #007AFF;
+    background: rgba(0, 122, 255, 0.08);
+    border: 1px solid rgba(0, 122, 255, 0.22);
+    border-radius: 999px;
+    padding: 6px 14px;
+  }
+
+  .hero-right { width: 54%; position: relative; z-index: 1; display: flex; justify-content: center; }
+  #hero .shot-frame img { max-height: 560px; }
+
+  /* ============ GALLERY（1320×640）============ */
+  #gallery {
+    width: 1320px;
+    height: 640px;
+    display: flex;
+    gap: 28px;
+    padding: 44px 44px 36px;
+    background: #F5F7FA;
+  }
+  .g-card {
+    flex: 1;
+    background: #FFFFFF;
+    border-radius: 18px;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+    padding: 14px 14px 22px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .g-card .g-shot {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+    margin-bottom: 12px;
+  }
+  .g-card .g-shot img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 10px;
+  }
+  .g-caption {
+    text-align: center;
+  }
+  .g-caption .t {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1D1D1F;
+  }
+  .g-caption .s {
+    font-size: 12px;
+    color: #86868B;
+    margin-top: 2px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<div id="hero">
+  <div class="hero-left">
+    <img class="hero-icon" src="../assets/icon.png" alt="icon" />
+    <div class="hero-title">PasteHistory</div>
+    <div class="hero-subtitle">历史粘贴板 — Windows 剪贴板历史管理工具</div>
+    <ul class="hero-features">
+      <li><span class="f-ico">📋</span>自动记录文字、图片与复制过的文件</li>
+      <li><span class="f-ico">⌨️</span>Alt+V 全局快捷键随时呼出</li>
+      <li><span class="f-ico">⭐</span>收藏夹 + 多分类管理</li>
+      <li><span class="f-ico">🌐</span>中英文界面切换</li>
+    </ul>
+    <div class="hero-badges">
+      <span>Windows x64</span>
+      <span>Electron</span>
+      <span>MIT</span>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="shot-frame">
+      <img src="../assets/screenshots/raw/shot1.png" alt="PasteHistory 主界面" />
+    </div>
+  </div>
+</div>
+
+<!-- ============ GALLERY ============ -->
+<div id="gallery">
+  <div class="g-card">
+    <div class="g-shot">
+      <img src="../assets/screenshots/raw/shot2.png" alt="收藏与分类" />
+    </div>
+    <div class="g-caption">
+      <div class="t">📁 收藏与分类</div>
+      <div class="s">Favorites &amp; Categories</div>
+    </div>
+  </div>
+  <div class="g-card">
+    <div class="g-shot">
+      <img src="../assets/screenshots/raw/shot3.png" alt="设置面板" />
+    </div>
+    <div class="g-caption">
+      <div class="t">⚙️ 设置面板</div>
+      <div class="s">Settings</div>
+    </div>
+  </div>
+  <div class="g-card">
+    <div class="g-shot">
+      <img src="../assets/screenshots/raw/shot5.png" alt="眼睛模式" />
+    </div>
+    <div class="g-caption">
+      <div class="t">👁 眼睛模式</div>
+      <div class="s">Eye Mode</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // 由 generate-screenshots.js 通过 query 指定渲染哪个画布
+  const mode = new URLSearchParams(location.search).get('mode');
+  document.addEventListener('DOMContentLoaded', () => {
+    document.body.style.overflow = 'hidden';
+    if (mode === 'hero') {
+      document.getElementById('gallery').remove();
+    } else {
+      document.getElementById('hero').remove();
+    }
+  });
+</script>
+</body>
+</html>
