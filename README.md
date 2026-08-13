@@ -32,16 +32,11 @@
 
 ## 界面
 
-<div align="center">
-  <img src="assets/screenshots/hero.png" alt="PasteHistory 主界面" width="860">
-</div>
+<img width="1200" height="680" alt="hero" src="https://github.com/user-attachments/assets/8bff916b-e18f-4f28-968b-3054fb398b5f" />
 
-<div align="center">
-  <img src="assets/screenshots/gallery.png" alt="PasteHistory 功能一览" width="860">
-</div>
 
-> 展示图由 `npm run screenshots` 生成（素材放在 `assets/screenshots/raw/`，不进仓库）。
-> 更换截图后重新运行即可更新。
+<img width="1320" height="640" alt="gallery" src="https://github.com/user-attachments/assets/69375813-3979-4f53-bb63-513c61321e67" />
+
 
 ## 安装
 
