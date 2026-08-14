@@ -56,7 +56,7 @@ PasteHistory 是一款轻量的 Windows 剪贴板历史管理工具。它在后�
 ### 下载安装包（推荐）
 
 前往 [Releases](https://github.com/jiangenqi/paste-history/releases) 页面下载最新版
-`PasteHistory v3.0.2.exe`，双击安装。安装后程序驻留系统托盘，按 `Alt+V` 即可呼出。
+`PasteHistory v3.0.3.exe`，双击安装。安装后程序驻留系统托盘，按 `Alt+V` 即可呼出。
 
 ### 从源码运行
 

@@ -33,6 +33,8 @@ const shortcutInput = document.getElementById('shortcutInput');
 const recordShortcut = document.getElementById('recordShortcut');
 const shortcutHint = document.getElementById('shortcutHint');
 const autoLaunchToggle = document.getElementById('autoLaunchToggle');
+const languageOptions = document.getElementById('languageOptions');
+const themeOptions = document.getElementById('themeOptions');
 const eyeSizeOptions = document.getElementById('eyeSizeOptions');
 const eyeIdleOptions = document.getElementById('eyeIdleOptions');
 const customEyeIdleBox = document.getElementById('customEyeIdleBox');
@@ -87,6 +89,12 @@ let modalCheckedIds = new Set();    // 弹窗中勾选的剪贴 ID
 // ==================== 国际化 ====================
 function t(key, params) {
   return window.i18n.t(currentSettings.language || 'zh', key, params);
+}
+
+// 应用深色模式（body.dark-mode 覆盖亮色 CSS 变量）
+function applyTheme() {
+  const theme = currentSettings.theme || 'light';
+  document.body.classList.toggle('dark-mode', theme === 'dark');
 }
 
 // 应用当前语言到全部界面文案
@@ -146,6 +154,7 @@ function applyLanguage() {
 // ==================== 初始化 ====================
 async function init() {
   await loadSettings();
+  applyTheme();
   await loadClips();
   await loadCategories();
   setupSearchListeners();
@@ -230,6 +239,12 @@ function loadSettingsUI() {
     btn.classList.toggle('active', btn.dataset.value === language);
   });
 
+  // 深色模式
+  const theme = currentSettings.theme || 'light';
+  document.querySelectorAll('#themeOptions .option-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.value === theme);
+  });
+
   // 保留期限
   const retention = currentSettings.retention;
   document.querySelectorAll('#retentionOptions .option-btn').forEach(btn => {
@@ -308,6 +323,17 @@ function setupSettingsListeners() {
     btn.classList.add('active');
     currentSettings.language = btn.dataset.value;
     applyLanguage();
+    await saveCurrentSettings();
+  });
+
+  // 深色模式
+  themeOptions.addEventListener('click', async (e) => {
+    const btn = e.target.closest('.option-btn');
+    if (!btn) return;
+    document.querySelectorAll('#themeOptions .option-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentSettings.theme = btn.dataset.value;
+    applyTheme();
     await saveCurrentSettings();
   });
 

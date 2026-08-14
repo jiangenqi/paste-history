@@ -29,6 +29,11 @@ window.clipboardAPI.onEyeResetCooldown(() => {
   document.body.classList.remove('closing');
 });
 
+// 深色模式：主进程下发主题，眼睛切换深色外观
+window.clipboardAPI.onEyeTheme((theme) => {
+  document.body.classList.toggle('dark', theme === 'dark');
+});
+
 function syncMaxShift() {
   const style = getComputedStyle(document.body);
   maxShift = parseFloat(style.getPropertyValue('--max-shift').trim()) || 5;

@@ -5,6 +5,10 @@ const crypto = require('crypto');
 const database = require('./database');
 const i18n = require('./renderer/i18n.js');
 
+// 任务栏身份：显式设置 AppUserModelID，避免 Windows 任务栏显示 "Electron"
+// （右键菜单名称、固定到任务栏的图标分组均依赖此 ID，与 NSIS 快捷方式保持一致）
+app.setAppUserModelId('com.pastehistory.app');
+
 // 主进程文案查找（跟随当前设置的语言）
 function tr(key, params) {
   return i18n.t((loadSettings().language) || 'zh', key, params);
@@ -74,7 +78,7 @@ function createWindow() {
     y: savedBounds.y,
     frame: false,
     icon: path.join(__dirname, 'assets', 'icon.png'),
-    backgroundColor: '#F2F2F7',
+    backgroundColor: themeColors().bg,
     resizable: true,
     minWidth: 320,
     minHeight: 400,
@@ -156,6 +160,7 @@ function createEyeWindow(eyeSize = 'medium') {
 
   // 眼睛尺寸白名单校验，防止任意值进入 executeJavaScript 模板
   const safeSize = EYE_SIZES[eyeSize] ? eyeSize : 'medium';
+  currentEyeSize = safeSize;
 
   const { screen } = require('electron');
   const primary = screen.getPrimaryDisplay();
@@ -189,6 +194,13 @@ function createEyeWindow(eyeSize = 'medium') {
   eyeWindow.once('ready-to-show', () => {
     if (eyeWindow && !eyeWindow.isDestroyed()) {
       eyeWindow.webContents.executeJavaScript(`document.body.classList.add('size-${safeSize}')`);
+    }
+  });
+
+  // 页面加载完成后下发当前主题（加载前发送的消息会丢失）
+  eyeWindow.webContents.on('did-finish-load', () => {
+    if (eyeWindow && !eyeWindow.isDestroyed()) {
+      eyeWindow.webContents.send('eye:setTheme', loadSettings().theme || 'light');
     }
   });
 }
@@ -303,15 +315,25 @@ function stopEyeIdleTracking() {
 // ==================== 伴生窗口（zZ 独立透明窗口，位于眼窗右侧） ====================
 const COMPANION_OFFSET_X = -40;
 const COMPANION_OFFSET_Y = -20;
-const COMPANION_W = 110;
-const COMPANION_H = 70;
+// 伴生窗口与 zZ 字号随眼睛尺寸等比缩放（medium 为基准）
+const COMPANION_SIZES = {
+  small:  { w: 88,  h: 56 },
+  medium: { w: 110, h: 70 },
+  large:  { w: 140, h: 90 }
+};
+let currentEyeSize = 'medium';
+
+function companionSize() {
+  return COMPANION_SIZES[currentEyeSize] || COMPANION_SIZES.medium;
+}
 
 function createCompanionWindow() {
   if (companionWindow && !companionWindow.isDestroyed()) return;
 
+  const cs = companionSize();
   companionWindow = new BrowserWindow({
-    width: COMPANION_W,
-    height: COMPANION_H,
+    width: cs.w,
+    height: cs.h,
     frame: false,
     transparent: true,
     alwaysOnTop: true,
@@ -329,6 +351,12 @@ function createCompanionWindow() {
   companionWindow.loadFile(path.join(__dirname, 'renderer', 'companion.html'));
   companionWindow.setVisibleOnAllWorkspaces(true);
   companionWindow.setIgnoreMouseEvents(true);
+  // 页面加载完成后下发当前尺寸（加载前发送的消息会丢失）
+  companionWindow.webContents.on('did-finish-load', () => {
+    if (companionWindow && !companionWindow.isDestroyed()) {
+      companionWindow.webContents.send('companion:setSize', currentEyeSize);
+    }
+  });
 }
 
 function syncCompanionPosition() {
@@ -338,11 +366,12 @@ function syncCompanionPosition() {
     return;
   }
   const eb = eyeWindow.getBounds();
+  const cs = companionSize();
   companionWindow.setBounds({
     x: Math.round(eb.x + eb.width + COMPANION_OFFSET_X),
-    y: Math.round(eb.y + (eb.height - COMPANION_H) / 2 + COMPANION_OFFSET_Y),
-    width: COMPANION_W,
-    height: COMPANION_H
+    y: Math.round(eb.y + (eb.height - cs.h) / 2 + COMPANION_OFFSET_Y),
+    width: cs.w,
+    height: cs.h
   });
 }
 
@@ -364,6 +393,7 @@ function hideCompanion() {
 function setEyeWindowSize(size) {
   if (!eyeWindow || eyeWindow.isDestroyed()) return;
   const safeSize = EYE_SIZES[size] ? size : 'medium';
+  currentEyeSize = safeSize;
   const s = EYE_SIZES[safeSize];
   const bounds = eyeWindow.getBounds();
   eyeWindow.setBounds({
@@ -372,8 +402,15 @@ function setEyeWindowSize(size) {
     width: s.w,
     height: s.h
   });
-  eyeWindow.webContents.executeJavaScript(`document.body.className = 'size-${safeSize}'`);
-  syncCompanionPosition();
+  // 只替换尺寸 class，保留 dark 等其他状态 class（直接赋值 className 会清掉深色模式）
+  eyeWindow.webContents.executeJavaScript(
+    `document.body.classList.remove('size-small','size-medium','size-large'); document.body.classList.add('size-${safeSize}')`
+  );
+  // 伴生窗口（zZ）跟随缩放
+  if (companionWindow && !companionWindow.isDestroyed()) {
+    companionWindow.webContents.send('companion:setSize', safeSize);
+    syncCompanionPosition();
+  }
 }
 
 // ==================== 窗口位置记忆 ====================
@@ -629,8 +666,20 @@ const DEFAULT_SETTINGS = {
   eyeSize: 'medium',
   eyeIdleSeconds: 120,
   eyeIdleCustom: 120,
-  language: 'zh'
+  language: 'zh',
+  theme: 'light'
 };
+
+// 窗口背景色（跟随主题，避免调整大小时闪白/闪黑）
+function themeColors() {
+  const dark = loadSettings().theme === 'dark';
+  return {
+    bg: dark ? '#1C1C1E' : '#F2F2F7',
+    surface: dark ? '#2C2C2E' : '#FFFFFF',
+    text: dark ? '#F5F5F7' : '#1D1D1F',
+    textSecondary: dark ? '#98989E' : '#86868B'
+  };
+}
 
 function loadSettings() {
   try {
@@ -881,7 +930,7 @@ function setupIPC() {
       frame: true,
       autoHideMenuBar: true,
       icon: path.join(__dirname, 'assets', 'icon.png'),
-      backgroundColor: '#F2F2F7',
+      backgroundColor: themeColors().bg,
       resizable: true,
       title: tr('detail.title'),
       parent: mainWindow || undefined,
@@ -923,6 +972,9 @@ function setupIPC() {
         '</div>';
     }
 
+    const c = themeColors();
+    const cardBorder = (loadSettings().theme === 'dark')
+      ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.06)';
     const html = `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -932,8 +984,8 @@ function setupIPC() {
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     font-family: "Segoe UI", "Microsoft YaHei", "PingFang SC", sans-serif;
-    background: #F2F2F7;
-    color: #1D1D1F;
+    background: ${c.bg};
+    color: ${c.text};
     padding: 20px;
     height: 100vh;
     overflow: auto;
@@ -944,10 +996,10 @@ function setupIPC() {
     line-height: 1.8;
     white-space: pre-wrap;
     word-break: break-all;
-    background: #fff;
+    background: ${c.surface};
     border-radius: 10px;
     padding: 20px;
-    border: 1px solid rgba(0,0,0,0.06);
+    border: 1px solid ${cardBorder};
     box-shadow: 0 1px 3px rgba(0,0,0,0.04);
   }
   .image-container {
@@ -972,10 +1024,10 @@ function setupIPC() {
     display: flex;
     align-items: center;
     gap: 10px;
-    background: #fff;
+    background: ${c.surface};
     border-radius: 8px;
     padding: 10px 14px;
-    border: 1px solid rgba(0,0,0,0.06);
+    border: 1px solid ${cardBorder};
     box-shadow: 0 1px 3px rgba(0,0,0,0.04);
   }
   .file-item-icon {
@@ -991,12 +1043,12 @@ function setupIPC() {
   .file-item-name {
     font-size: 13px;
     font-weight: 500;
-    color: #1D1D1F;
+    color: ${c.text};
     word-break: break-all;
   }
   .file-item-path {
     font-size: 10px;
-    color: #86868B;
+    color: ${c.textSecondary};
     word-break: break-all;
   }
 </style>
@@ -1022,11 +1074,26 @@ function setupIPC() {
     if (settings && settings.language && !['zh', 'en'].includes(settings.language)) {
       settings.language = DEFAULT_SETTINGS.language;
     }
+    // 主题白名单
+    if (settings && settings.theme && !['light', 'dark'].includes(settings.theme)) {
+      settings.theme = DEFAULT_SETTINGS.theme;
+    }
     const prevLanguage = loadSettings().language || 'zh';
+    const prevTheme = loadSettings().theme || 'light';
     const ok = saveSettings(settings);
     // 语言变更时重建托盘菜单
     if (ok && tray && (settings.language || prevLanguage) !== prevLanguage) {
       tray.setContextMenu(buildTrayMenu());
+    }
+    // 主题变更时同步窗口背景色与眼睛外观
+    if (ok && (settings.theme || prevTheme) !== prevTheme) {
+      const bg = themeColors().bg;
+      if (mainWindow && !mainWindow.isDestroyed()) {
+        mainWindow.setBackgroundColor(bg);
+      }
+      if (eyeWindow && !eyeWindow.isDestroyed()) {
+        eyeWindow.webContents.send('eye:setTheme', settings.theme || 'light');
+      }
     }
     return ok;
   });

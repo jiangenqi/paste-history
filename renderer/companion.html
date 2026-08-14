@@ -12,14 +12,28 @@
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
+  /* zZ 字号随眼睛尺寸等比缩放（medium 为基准） */
+  :root {
+    --z1: 22px; --z2: 28px; --z3: 34px;
+  }
+  body.size-small {
+    --z1: 18px; --z2: 22px; --z3: 27px;
+  }
+  body.size-large {
+    --z1: 27px; --z2: 35px; --z3: 43px;
+  }
+
   .zz-stage {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
     pointer-events: none;
     opacity: 0;
-    transition: opacity 0.6s ease 1.2s;
+    transition: opacity 0.15s ease;      /* 消失：眼睛惊醒时立即隐去 */
   }
-  .zz-stage.active { opacity: 1; }
+  .zz-stage.active {
+    opacity: 1;
+    transition: opacity 0.6s ease 1.2s;  /* 出现：入睡后延迟淡入 */
+  }
 
   .z {
     position: absolute;
@@ -31,9 +45,9 @@
     animation: zDiag 4.5s ease-out infinite;
     opacity: 0;
   }
-  .z:nth-child(1) { animation-delay: 0s;   left: 6%;  bottom: 6%;  font-size: 22px; }
-  .z:nth-child(2) { animation-delay: 1.5s; left: 6%;  bottom: 6%;  font-size: 28px; }
-  .z:nth-child(3) { animation-delay: 3.0s; left: 6%;  bottom: 6%;  font-size: 34px; }
+  .z:nth-child(1) { animation-delay: 0s;   left: 6%;  bottom: 6%;  font-size: var(--z1); }
+  .z:nth-child(2) { animation-delay: 1.5s; left: 6%;  bottom: 6%;  font-size: var(--z2); }
+  .z:nth-child(3) { animation-delay: 3.0s; left: 6%;  bottom: 6%;  font-size: var(--z3); }
 
   @keyframes zDiag {
     0%   { opacity: 0; transform: translate(0, 0) scale(0.3) rotate(-6deg); }

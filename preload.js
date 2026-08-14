@@ -109,10 +109,24 @@ contextBridge.exposeInMainWorld('clipboardAPI', {
     return () => ipcRenderer.removeListener('eye:resetCooldown', handler);
   },
 
+  // 眼睛主题（跟随应用深色模式）
+  onEyeTheme: (callback) => {
+    const handler = (event, theme) => callback(theme);
+    ipcRenderer.on('eye:setTheme', handler);
+    return () => ipcRenderer.removeListener('eye:setTheme', handler);
+  },
+
   // 伴生窗口 — 重置
   onCompanionReset: (callback) => {
     const handler = () => callback();
     ipcRenderer.on('companion:reset', handler);
     return () => ipcRenderer.removeListener('companion:reset', handler);
+  },
+
+  // 伴生窗口 — 尺寸（跟随眼睛大小）
+  onCompanionSize: (callback) => {
+    const handler = (event, size) => callback(size);
+    ipcRenderer.on('companion:setSize', handler);
+    return () => ipcRenderer.removeListener('companion:setSize', handler);
   }
 });

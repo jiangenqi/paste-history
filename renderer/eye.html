@@ -236,6 +236,52 @@
   }
 
   /* zZ 与垃圾话由独立 companion 窗口渲染，不在此处 */
+  /* ── 深色模式：炭黑眼球 + 金虹膜（夜间猫眼风格）── */
+  body.dark .glass-pill {
+    background: linear-gradient(160deg, rgba(66, 64, 58, 0.62), rgba(32, 31, 29, 0.58));
+    box-shadow:
+      0 0 0 0.5px rgba(255, 235, 200, 0.14),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.30);
+  }
+  body.dark.state-drowsy .glass-pill {
+    background: linear-gradient(160deg, rgba(58, 56, 51, 0.56), rgba(30, 29, 27, 0.52));
+  }
+  body.dark.state-asleep .glass-pill {
+    background: linear-gradient(160deg, rgba(50, 48, 44, 0.50), rgba(27, 26, 24, 0.46));
+  }
+  body.dark .eye {
+    background:
+      radial-gradient(ellipse at 50% 38%, #3A3833 40%, #2C2B28 72%, #1E1D1B 100%);
+    box-shadow:
+      inset 0 -2px 6px rgba(0,0,0,0.60),
+      inset 0 2px 4px rgba(255,255,255,0.08),
+      0 0 0 1px rgba(255,235,200,0.08);
+  }
+  body.dark .iris {
+    background: radial-gradient(circle at 42% 36%,
+      #FFE9B8 0%, #F0C060 18%, #C8902F 42%, #6E4A12 76%, #2B1B05 100%);
+    box-shadow:
+      inset 0 0 4px rgba(0,0,0,0.50),
+      inset 0 0 0 1px rgba(255,255,255,0.25),
+      0 1px 3px rgba(0,0,0,0.30);
+  }
+  body.dark .pupil {
+    background: #050404;
+    box-shadow: 0 0 4px rgba(0,0,0,0.7);
+  }
+  body.dark .highlight {
+    background: #FFFFFF;
+  }
+  body.dark .eyelid {
+    background: linear-gradient(180deg, #45423B, #33312B);
+  }
+  body.dark.state-asleep .eye .eyelid {
+    background: linear-gradient(180deg, #403E38, #2F2D28);
+  }
+  body.dark.state-startled .eye .eyelid {
+    background: linear-gradient(180deg, #45423B, #33312B);
+  }
 </style>
 </head>
 <body>
